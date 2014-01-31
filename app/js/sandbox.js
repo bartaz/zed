@@ -28,7 +28,7 @@ define(function(require, exports, module) {
             sandboxEl.remove();
         }
         if(typeof window.chrome === 'undefined') {
-            $("body").append('<iframe src="nw-sandbox.html" id="sandbox" style="display: none;">');
+            $("body").append('<iframe src="nw-sandbox.html" nwdisable id="sandbox" style="display: none;">');
         } else {
             $("body").append('<iframe src="sandbox.html" id="sandbox" style="display: none;">');
         }

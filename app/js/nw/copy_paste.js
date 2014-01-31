@@ -30,4 +30,11 @@ define(function(require, exports, module) {
         },
         readOnly: true
     });
+    
+    command.define("Develop:Developer Tools", {
+        exec: function() {
+            gui.Window.get().showDevTools("sandbox");
+        },
+        readOnly: true
+    });
 });

@@ -1,6 +1,6 @@
 {
     "name": "zed",
-    "main": "nw.html?url=nw:/Users/zef/git/ace",
+    "main": "nw.html?url=nw:/Users/zef/git/ace&title=Ace",
     "icon": "Icon.png",
     "window": {
         "title": "Zed",
@@ -16,3 +16,4 @@
         "page-cache": false
     }
 }
+

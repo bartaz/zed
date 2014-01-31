@@ -61,7 +61,7 @@ define(function(require, exports, module) {
                                 return next();
                             }
                             var fullPath = dir + "/" + entry;
-                            nodeFs.stat(fullPath, function(err, stat) {
+                            nodeFs.lstat(fullPath, function(err, stat) {
                                 if (err) {
                                     return next(err);
                                 }
@@ -75,10 +75,7 @@ define(function(require, exports, module) {
                         }, callback);
                     });
                 }
-                readDir(rootPath, function(err) {
-                    if (err) {
-                        return callback(err);
-                    }
+                readDir(rootPath, function() {
                     callback(null, files.map(stripRoot));
                 });
             },
@@ -90,7 +87,7 @@ define(function(require, exports, module) {
                     if (err) {
                         return callback(err);
                     }
-                    nodeFs.stat(fullPath, function(err, stat) {
+                    nodeFs.lstat(fullPath, function(err, stat) {
                         if(err) {
                             console.error("Readfile successful, but error during stat:", err);
                         }
@@ -110,7 +107,7 @@ define(function(require, exports, module) {
                         if (err) {
                             return callback(err);
                         }
-                        nodeFs.stat(fullPath, function(err, stat) {
+                        nodeFs.lstat(fullPath, function(err, stat) {
                             watcher.setCacheTag(path, "" + stat.mtime);
                             callback();
                         });
@@ -128,7 +125,7 @@ define(function(require, exports, module) {
                 watcher.unwatchFile(path, callback);
             },
             getCacheTag: function(path, callback) {
-                nodeFs.stat(addRoot(path), function(err, stat) {
+                nodeFs.lstat(addRoot(path), function(err, stat) {
                     if(err) {
                         return callback(404);
                     }

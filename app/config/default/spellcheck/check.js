@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     var indexToPos = require("zed/util").indexToPos;
     var Typo = require("configfs!./typo.js");
 
-    var RE_WORD = /\w/;
+    var RE_WORD = /[a-zA-Z]/;
     var affData = null;
     var wordsData = null;
     var dict;
@@ -42,6 +42,7 @@ define(function(require, exports, module) {
         if (dict) {
             callback(null, dict);
         } else {
+            console.log("Loading dictionary");
             configfs.readFile("/default/spellcheck/en_US/en_US.aff", function(err, affData_) {
                 if (err) {
                     return callback(err);

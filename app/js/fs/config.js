@@ -2,7 +2,7 @@
 define(function(require, exports, module) {
     
     return function(isConfigurationProject, callback) {
-        if (typeof window.chrome === "undefined") {
+        if (window.isNodeWebkit) {
             require(["./union", "./static", "./node"], function(unionfs, staticfs, nodefs) {
                 var fs = nodeRequire("fs");
                 staticfs("config", {

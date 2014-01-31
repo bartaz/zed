@@ -5,6 +5,7 @@ define({
             if(err) {
                 return console.error("Error while loading file", err);
             }
+            console.log("Reloaded module", name);
             onload.fromText(text);
         });
     }

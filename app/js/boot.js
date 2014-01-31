@@ -7,6 +7,8 @@ require.config({
     },
 });
 
+window.isNodeWebkit = typeof window.chrome === "undefined";
+
 /* global ace, $, _ */
 require(["text!../manual/cheatsheet.md"], function(cheatsheet) {
     "use strict";
@@ -34,6 +36,11 @@ require(["text!../manual/cheatsheet.md"], function(cheatsheet) {
         "./dnd",
         "./handlers"
     ];
+    
+    if(window.isNodeWebkit) {
+        modules.push("./nw/copy_paste");
+    }
+    
     require(modules, function() {
         var session_manager = require("./session_manager");
 
