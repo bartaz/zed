@@ -27,7 +27,11 @@ define(function(require, exports, module) {
         if (sandboxEl) {
             sandboxEl.remove();
         }
-        $("body").append('<iframe src="sandbox.html" id="sandbox" style="display: none;">');
+        if(typeof window.chrome === 'undefined') {
+            $("body").append('<iframe src="nw-sandbox.html" id="sandbox" style="display: none;">');
+        } else {
+            $("body").append('<iframe src="sandbox.html" id="sandbox" style="display: none;">');
+        }
         sandboxEl = $("#sandbox");
         waitingForReply = {};
         id = 0;

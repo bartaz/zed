@@ -1,4 +1,4 @@
-/* global chrome, $ */
+/* global: $ */
 define(function(require, exports, module) {
     var sessionCache = {};
 
@@ -31,11 +31,6 @@ define(function(require, exports, module) {
                         time: Date.now(),
                         content: result
                     };
-                    if (options.persistent) {
-                        var obj = {};
-                        obj[cacheKey] = cacheEntry;
-                        chrome.storage.local.set(obj);
-                    }
                     sessionCache[url] = cacheEntry;
                     callback(null, result);
                 },
@@ -50,13 +45,7 @@ define(function(require, exports, module) {
             if (hasNotTimedOut(entry)) {
                 return callback(null, entry.content);
             }
-            chrome.storage.local.get(cacheKey, function(results) {
-                var entry = results[cacheKey];
-                if (hasNotTimedOut(entry)) {
-                    return callback(null, entry.content);
-                }
-                httpGet(callback);
-            });
+            httpGet(callback);
         }
 
         if (options.fallbackCache) {
@@ -73,14 +62,5 @@ define(function(require, exports, module) {
 
     exports.flushCache = function() {
         sessionCache = {};
-        chrome.storage.local.get(null, function(results) {
-            var toRemove = [];
-            Object.keys(results).forEach(function(key) {
-                if (key.indexOf("cache:") === 0) {
-                    toRemove.push(key);
-                }
-            });
-            chrome.storage.local.remove(toRemove);
-        });
     };
 });

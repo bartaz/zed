@@ -62,7 +62,7 @@ define(function(require, exports, module) {
                                     setupMethods(io);
                                 }
                             }
-                            io.writeFile("/welcome.md", require("text!../../notes.md"), doneCallback);
+                            io.writeFile("/welcome.md", require("text!../notes.md"), doneCallback);
                             io.writeFile("/.zedstate", '{"session.current": ["/welcome.md"]}', doneCallback);
                         } else {
                             setupMethods(io);
@@ -109,6 +109,13 @@ define(function(require, exports, module) {
                         });
                     });
                 }
+            });
+        } else if(url.indexOf("nw:") === 0) {
+            require(["./fs/node"], function(nodefs) {
+                var path = url.substring("nw:".length);
+                nodefs(path, function(err, io) {
+                    setupMethods(io);
+                });
             });
         } else {
             require('./fs/web')(url, function(err, io) {

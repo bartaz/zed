@@ -27,19 +27,21 @@ define(function(require, exports, module) {
                 module.exports.load();
             });
             eventbus.once("stateloaded", function() {
-                var win = chrome.app.window.current();
-                var bounds = state.get('window');
-                if (bounds) {
-                    win.setBounds(bounds);
-                }
-                win.onBoundsChanged.addListener(function() {
-                    state.set("window", win.getBounds());
-                    require(["./editor"], function(editor) {
-                        editor.getEditors().forEach(function(edit) {
-                            edit.resize();
+                if(typeof window.chrome !== "undefined") {
+                    var win = chrome.app.window.current();
+                    var bounds = state.get('window');
+                    if (bounds) {
+                        win.setBounds(bounds);
+                    }
+                    win.onBoundsChanged.addListener(function() {
+                        state.set("window", win.getBounds());
+                        require(["./editor"], function(editor) {
+                            editor.getEditors().forEach(function(edit) {
+                                edit.resize();
+                            });
                         });
                     });
-                });
+                }
             });
         },
         set: function(key, value) {
