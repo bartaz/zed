@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     var previewScrollY = 0;
 
     eventbus.declare("preview");
-
+    
     function isPreviewing() {
         var splitState = state.get("split");
         return splitState && ("" + splitState).indexOf("preview-") === 0;

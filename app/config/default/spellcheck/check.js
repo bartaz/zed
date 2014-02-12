@@ -1,67 +1,44 @@
 define(function(require, exports, module) {
     var session = require("zed/session");
-    var configfs = require("zed/configfs");
+    var config = require("zed/config");
     var indexToPos = require("zed/util").indexToPos;
-    var Typo = require("configfs!./typo.js");
+    var dict = require("configfs!./dict.js");
 
-    var RE_WORD = /[a-zA-Z]/;
-    var affData = null;
-    var wordsData = null;
-    var dict;
+    var RE_WORD = /[A-Za-z]/;
 
     return function(info, callback) {
-        var path = info.path;
-        
-        loadDict(function(err, dict) {
-            session.getText(path, function(err, text) {
-                if(err) {
-                    return callback("Error while spell checking: " + err);
-                }
-                var words = textToWordsWithPositions(text);
-                var errors = [];
-                words.forEach(function(word) {
-                    if(!dict.check(word.word)) {
-                        var startPos = indexToPos(text, word.start);
-                        var endPos = indexToPos(text, word.end);
-                        errors.push({
-                            row: startPos.row,
-                            column: startPos.column,
-                            endColumn: endPos.column,
-                            type: 'error',
-                            text: "Misspelling: " + word.word,
-                            word: word
-                        });
+        config.getPreference("spellCheck", function(err, shouldSpellCheck) {
+            if(!shouldSpellCheck) {
+                return callback(null, []);
+            }
+            var path = info.path;
+            
+            dict.loadDict(function(err, dict) {
+                session.getText(path, function(err, text) {
+                    if(err) {
+                        return callback("Error while spell checking: " + err);
                     }
+                    var words = textToWordsWithPositions(text);
+                    var errors = [];
+                    words.forEach(function(word) {
+                        if(!dict.check(word.word)) {
+                            var startPos = indexToPos(text, word.start);
+                            var endPos = indexToPos(text, word.end);
+                            errors.push({
+                                row: startPos.row,
+                                column: startPos.column,
+                                endColumn: endPos.column,
+                                type: 'error',
+                                text: "Misspelling: " + word.word,
+                                word: word
+                            });
+                        }
+                    });
+                    callback(null, errors);
                 });
-                callback(null, errors);
             });
         });
     };
-
-    function loadDict(callback) {
-        if (dict) {
-            callback(null, dict);
-        } else {
-            console.log("Loading dictionary");
-            configfs.readFile("/default/spellcheck/en_US/en_US.aff", function(err, affData_) {
-                if (err) {
-                    return callback(err);
-                }
-                affData = affData_;
-                configfs.readFile("/default/spellcheck/en_US/en_US.dic", function(err, wordsData_) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    
-                    wordsData = wordsData_;
-
-                    dict = new Typo("en_US", affData, wordsData);
-                    callback(null, dict);
-                });
-            });
-        }
-    }
-
 
     function textToWordsWithPositions(text) {
         var word = '';

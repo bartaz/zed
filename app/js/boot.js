@@ -13,8 +13,8 @@ window.isNodeWebkit = typeof window.chrome === "undefined";
 require(["text!../manual/cheatsheet.md"], function(cheatsheet) {
     "use strict";
 
-    var useragent = ace.require("ace/lib/useragent");
-
+    var useragent = require("ace/lib/useragent");
+    
     var modules = [
         "./command",
         "./editor",
@@ -34,7 +34,8 @@ require(["text!../manual/cheatsheet.md"], function(cheatsheet) {
         "./file",
         "./preview",
         "./dnd",
-        "./handlers"
+        "./handlers",
+        "./fix"
     ];
     
     if(window.isNodeWebkit) {
